@@ -82,6 +82,7 @@ router.post('/deleteResponse', async (req,res) => {
         res.send({ ok: false, result: require });
     }
 })
+
 router.post('/status', async (req,res) => {
     const require = await Viewers.statusVerify(req.body)
     if(require)

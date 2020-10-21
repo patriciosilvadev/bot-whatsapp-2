@@ -177,16 +177,22 @@ exports.Viewers = {
     },
 
     async statusVerify(payload){
-        const sql = queries.query.statusVerify(payload)
-        const result = await execute(sql)
-
-        if (result.rows == '') {
+        if (payload) {
             
-            return { msg: "Error", status: 400, payload }
-        }else
-        {
-            return (result.rows); 
+            const sql = queries.query.statusVerify(payload)
+            //console.log(sql);
+            const result = await execute(sql)
+            
+            if (!result || !result.rows) {
+                
+               return { msg: "Ops...", status: 400, payload }
+          
+            }
+            
+            return { msg: "OK", status: 201, payload }
         }
+        
+        return { msg: "NÃO INCLUÍDO", status: 400, payload }
     }
 }
 
