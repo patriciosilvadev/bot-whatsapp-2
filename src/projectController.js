@@ -82,5 +82,28 @@ router.post('/deleteResponse', async (req,res) => {
         res.send({ ok: false, result: require });
     }
 })
+router.post('/status', async (req,res) => {
+    const require = await Viewers.statusVerify(req.body)
+    if(require)
+    {
+        if(require.msg == "OK")
+        {
+            return res.send({ ok: true, result: require });
+        }else
+        {
+            if(require.msg == "Ops...")
+            {
+                return res.send({ msg: "Ops...", status: 400});
+            }
+            if(require.msg == "NÃO INCLUÍDO")
+            {
+                return res.send({ msg: "NÃO INCLUÍDO", status: 400});
+            }
+        }
+    }else
+    {
+        res.send({ ok: false, result: require });
+    }
+})
 
 module.exports = app => app.use('/project', router);

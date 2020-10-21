@@ -175,7 +175,19 @@ exports.Viewers = {
             return (result.rows); 
         }
     },
-    
+
+    async statusVerify(payload){
+        const sql = queries.query.statusVerify(payload)
+        const result = await execute(sql)
+
+        if (result.rows == '') {
+            
+            return { msg: "Error", status: 400, payload }
+        }else
+        {
+            return (result.rows); 
+        }
+    }
 }
 
 

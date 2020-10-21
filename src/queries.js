@@ -155,5 +155,15 @@ exports.query = {
         `
         return { query, params }
     },
+
+    statusVerify(data){
+        const params = [
+            data.userName
+        ]
+        const query = `
+        SELECT * FROM users_now WHERE cliente= ?;
+        `
+        return { query, params }
+    }
 }
 
