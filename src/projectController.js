@@ -89,6 +89,7 @@ router.post('/status', async (req,res) => {
     {
         if(require.msg == "OK")
         {
+            require.result.result[0].password = undefined;
             return res.send({ ok: true, result: require });
         }else
         {

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const venom = require('venom-bot');
-
+const {Viewers} = require('./model')
 
 function connect(session){
 const connect = venom
