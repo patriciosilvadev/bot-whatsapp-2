@@ -9,16 +9,16 @@ const configs = require('./global-config');
 const { response } = require('express');
 
 
-// void async function() {
-//   var user = await afterusers()
-//   for(var cont = 0 ; cont <= user.length ;cont++)
-//   {
-//       connect(user[cont].cliente).then((client) => {start(client)})
-//         .catch((erro) => {
-//         console.log(erro);
-//       });
-//   } 
-// }()
+void async function() {
+  var user = await afterusers()
+  for(var cont = 0 ; cont <= user.length ;cont++)
+  {
+      connect(user[cont].cliente).then((client) => {start(client)})
+        .catch((erro) => {
+        console.log(erro);
+      });
+  } 
+}()
 
 //loop para verificar mudanças no banco de dados
 var job = new CronJob('*/5 * * * * *', async function() {
