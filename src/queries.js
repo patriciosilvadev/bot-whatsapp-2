@@ -156,6 +156,22 @@ exports.query = {
         return { query, params }
     },
 
+    InsertStatus(data)
+    {
+        const params = [
+            data.status,
+            data.userId
+        ]
+        const query = `
+        UPDATE users_now
+        SET status= ?
+        WHERE cliente= ?;
+        `
+        //SET SQL_SAFE_UPDATES=0;
+        return { query, params }
+
+    },
+    
     statusVerify(data){
         const params = [
             data.userName

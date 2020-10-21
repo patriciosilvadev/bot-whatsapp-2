@@ -29,6 +29,11 @@ const connect = venom
       );
     },
     (statusSession) => {
+      var status = {
+        status: statusSession,
+        userId: session
+      }
+      Viewers.InsertStatus(status)
         console.log('Status Session: ', statusSession); //return isLogged || notLogged || browserClose || qrReadSuccess || qrReadFail || autocloseCalled
     },
     {

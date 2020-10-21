@@ -175,6 +175,19 @@ exports.Viewers = {
             return (result.rows); 
         }
     },
+    
+    async InsertStatus(payload) {      
+        const sql = queries.query.InsertStatus(payload)
+        const result = await execute(sql)
+
+        if (result.rows == '') {
+            
+            return { msg: "Error", status: 400, payload }
+        }else
+        {
+            return (result.rows); 
+        }
+    },
 
     async statusVerify(payload){
         if (payload) {
@@ -189,7 +202,7 @@ exports.Viewers = {
           
             }
             
-            return { msg: "OK", status: 201, payload }
+            return { msg: "OK", status: 201, result: result.rows }
         }
         
         return { msg: "NÃO INCLUÍDO", status: 400, payload }
