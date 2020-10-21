@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Contador de views</title>
+
+    <meta charset="utf-8"> 
+
+</head>
+
+<body>
+<h1 id="img"></h1>
+
+    <script type="text/javascript">
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var name = url.searchParams.get("name");
+            var img = document.createElement("img"); //criar elemento img
+            img.src = `../${name}.png`; //atribuindo a propriedade source da imagem    
+            document.getElementById("img").appendChild(img); //adicionando imagem como filha de demo
+    </script>
+
+</body>
+
+</html>
