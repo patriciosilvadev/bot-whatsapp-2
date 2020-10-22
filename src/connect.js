@@ -18,7 +18,7 @@ const connect = venom
 
       var imageBuffer = response;
         fs.writeFile(
-        `./public/${session}.png`,
+        `./public/images/${session}.png`,
         imageBuffer['data'],
         'binary',
         function (err) {
