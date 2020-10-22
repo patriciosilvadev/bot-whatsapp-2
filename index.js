@@ -68,15 +68,16 @@ job.start();
 //loop a cada uma hora para verificar conexoes
 var jobH = new CronJob('* 0 * * * *', async function() {
 
-  var afteruser = await afterusers()
-  for(var cont = 0 ; cont <= afteruser.length -1 ;cont++)
+  var NowUser = await nowuser()
+  for(var cont = 0 ; cont <= NowUser.length -1 ;cont++)
   {
-    
-    connect(afteruser[cont].cliente)
-    .then((client) => {start(client)})
-    .catch((erro) => {
-      console.log(erro);
-    });
+    if(NowUser[cont].status !== 'isLogged' && NowUser[cont].status !== 'qrReadSuccess'){
+      connect(NowUser[cont].cliente)
+      .then((client) => {start(client)})
+      .catch((erro) => {
+        console.log(erro);
+      });
+    }
   }
 }, null, true, 'America/Sao_Paulo');
 jobH.start();
