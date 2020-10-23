@@ -13,15 +13,12 @@ void async function() {
   var user = await afterusers()
   for(var cont = 0 ; cont <= user.length ;cont++)
   {
-      connect(user[cont].cliente).then((client) => {start(client)})
-        .catch((erro) => {
-        console.log(erro);
-      });
+    connects(user[cont].cliente)
   } 
 }()
 
 //loop para verificar mudanças no banco de dados
-var job = new CronJob('*/5 * * * * *', async function() {
+var job = new CronJob('*/8 * * * * *', async function() {
   var nowuser = await nowusers()
   var afteruser = await afterusers()
   if(afteruser.status !== 400)
@@ -40,12 +37,15 @@ var job = new CronJob('*/5 * * * * *', async function() {
         if(isEmpty(afteruser[cont]))
         {
           await Viewers.UpdateAfterUsers(nowuser[cont]);
-          connect(nowuser[cont].cliente)
-            .then((client) => {start(client)})
-            .catch((erro) => {
-              console.log(erro);
-            });
+          connects(nowuser[cont].cliente)
         }
+      }
+    }
+    for(var cont = 0 ; cont <= nowuser.length -1 ;cont++)
+    {
+      if(nowuser[cont].status === 'browserClose' || nowuser[cont].status === 'qrReadFail' || nowuser[cont].status === 'notLogged')
+      {
+        connects(nowuser[cont].cliente)
       }
     }
   }else
@@ -53,12 +53,7 @@ var job = new CronJob('*/5 * * * * *', async function() {
     for(var cont = 0 ; cont <= nowuser.length -1 ;cont++)
     {
       await Viewers.UpdateAfterUsers(nowuser[cont])
-      connect(nowuser[cont].cliente)
-      .then((client) => {start(client)})
-      .catch((erro) => {
-        console.log(erro);
-      });
-      
+      connects(nowuser[cont].cliente)
     }
   }
 }, null, true, 'America/Sao_Paulo');
@@ -66,23 +61,19 @@ job.start();
 
 
 //loop a cada uma hora para verificar conexoes
-var jobH = new CronJob('* 0 * * * *', async function() {
+// var jobH = new CronJob('* 0 * * * *', async function() {
+//   var NowUser = await nowuser()
+//   for(var cont = 0 ; cont <= NowUser.length-1 ;cont++) {
+//     if(NowUser[cont].status !== 'isLogged' && NowUser[cont].status !== 'qrReadSuccess'){
+//       connects(NowUser[cont].cliente)
+//     }
+//   }
+// }, null, true, 'America/Sao_Paulo');
+// jobH.start()
 
-  var NowUser = await nowuser()
-  for(var cont = 0 ; cont <= NowUser.length -1 ;cont++)
-  {
-    if(NowUser[cont].status !== 'isLogged' && NowUser[cont].status !== 'qrReadSuccess'){
-      connect(NowUser[cont].cliente)
-      .then((client) => {start(client)})
-      .catch((erro) => {
-        console.log(erro);
-      });
-    }
-  }
-}, null, true, 'America/Sao_Paulo');
-jobH.start();
 
 //funcao require do banco
+
 async function nowusers()
 {
   var users = await Viewers.SelectUser()
@@ -94,24 +85,29 @@ async function afterusers()
   return users
 }
 
+//conexão com venom-bot,respondendo mensagens
+async function connects(client){
+  connect(client)
+      .then(async (client) => { await start(client)})
+      .catch((erro) => {
+        console.log(erro);
+      });
+}
 
-//funcao para escutar e enviar mensagens
+
+//funcão responsavel pelo envio de mensagens automaticas
 async function start(client) {
   //console.log(client)
   client.onMessage(async (message) => {
     if(message.to)
     {
-      
       const phoneUser = split(message.to,'@')
       const users = await Viewers.UserSelectResponse(phoneUser[0])
       const responses = await Viewers.VerifyResponses(users[0])
-      
       for(var cont = 0; cont <= responses.length-1; cont++)
       {
-        
         if (message.body === responses[cont].msg && message.isGroupMsg === false) 
         {
-          
           switch (responses[cont].responseType)
           {
             case 'Text':
@@ -123,12 +119,13 @@ async function start(client) {
                 console.error('Error when sending: ', erro); //return object error
               });
               break;
-           /* case 'img':
+
+            case 'img':
               client.sendImage(
                 message.from,
-                `${responses[cont].responseImg}`,
-                `${responses[cont].responseImg}`,
-                'teste de imagem'
+                `./public/images/${responses[cont].responseImg}.png`,
+                `${responses[cont].responseImg}.png`,
+                `${responses[cont].responseText}`
               )
               .then((result) => {
                // console.log('Result: ', result); //return object success
@@ -137,9 +134,54 @@ async function start(client) {
                 console.error('Error when sending: ', erro); //return object error
               });
               break;
+
             case 'video':
+              client
+              .sendFile (
+                message.from,
+                `./public/video/${responses[cont].responseFile}.mp4` ,
+                `${responses[cont].responseFile}`,
+                `${responses[cont].responseText}`
+              )
+              .then( ( resultado ) =>  { 
+                console . log ( ' Resultado:  ' ,  resultado ) ; // retorna o sucesso do objeto 
+              } )
+              .catch( ( erro ) =>  { 
+                console . erro ( ' Erro ao enviar:  ' ,  erro ) ; // retorna erro de objeto 
+              } ) ;
+              break;
+
             case 'audio':
-            case 'file':*/
+              client
+              .sendFile (
+                message.from,
+                `./public/audios/${responses[cont].responseFile}.mp3` ,
+                `${responses[cont].responseFile}`,
+                `${responses[cont].responseText}`
+              )
+              .then( ( resultado ) =>  { 
+                console . log ( ' Resultado:  ' ,  resultado ) ; // retorna o sucesso do objeto 
+              } )
+              .catch ( ( erro ) =>  { 
+                console . erro ( ' Erro ao enviar:  ' ,  erro ) ; // retorna erro de objeto 
+              } ) ;
+              break;
+
+            case 'file':
+              client
+              .sendFile (
+                message.from,
+                `./public/file/${responses[cont].responseFile}.pdf` ,
+                `${responses[cont].responseFile}`,
+                `${responses[cont].responseText}`
+              )
+              .then( ( resultado ) =>  { 
+                console . log ( ' Resultado:  ' ,  resultado ) ; // retorna o sucesso do objeto 
+              } )
+              .catch( ( erro ) =>  { 
+                console . erro ( ' Erro ao enviar:  ' ,  erro ) ; // retorna erro de objeto 
+              });
+              break;
           }
         }
       }
