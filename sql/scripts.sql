@@ -32,3 +32,11 @@ CHANGE COLUMN `responseImg` `responseImg` LONGBLOB NULL DEFAULT NULL ,
 CHANGE COLUMN `responseVideo` `responseVideo` LONGBLOB NULL DEFAULT NULL ,
 CHANGE COLUMN `responseAudio` `responseAudio` LONGBLOB NULL DEFAULT NULL ,
 CHANGE COLUMN `responseFile` `responseFile` LONGBLOB NULL DEFAULT NULL ;
+
+ALTER TABLE `bot_wa`.`users_now` 
+ADD COLUMN `password` VARCHAR(2000) NOT NULL AFTER `number`,
+ADD COLUMN `status` VARCHAR(45) NULL AFTER `password`,
+CHANGE COLUMN `number` `number` VARCHAR(22) NOT NULL ;
+
+ALTER TABLE `bot_wa`.`users_now` 
+ADD COLUMN `email` VARCHAR(100) NOT NULL AFTER `cliente`;

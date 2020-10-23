@@ -1,0 +1,38 @@
+[
+    // register
+    {
+        "user":"rogerio",
+        "Phone":"5511959195189",
+        "password":"teste",
+        "email":"teste"
+    },
+    //Login
+    {
+        "user":"rogerio",
+        "password":"teste"
+    },
+    //consult responses
+    {
+        "id": 1
+    },
+    //register responses
+    {
+        "idUser":"",
+        "responseType":"",
+        "msg":"",
+        "responseText":"",
+        "responseImg":"",
+        "responseVideo":"",
+        "responseAudio":"",
+        "responseFile":""
+    },
+    //delete responses
+    {
+        "id":"",
+        "idUser":""
+    },
+    //check status 
+    {
+        "userName":""
+    }
+]    
